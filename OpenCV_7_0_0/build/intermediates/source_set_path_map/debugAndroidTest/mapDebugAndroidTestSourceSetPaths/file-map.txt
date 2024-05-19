@@ -1,0 +1,5 @@
+org.opencv.test.OpenCV_7_0_0-androidTest-0 C:\Users\kevin\OneDrive\Escritorio\SEPTIMO_CICLO\VISION_POR_COMPUTADOR\Proyecto_Opencv7.0\OpenCV_7_0_0\build\generated\res\resValues\androidTest\debug
+org.opencv.test.OpenCV_7_0_0-mergeDebugAndroidTestResources-1 C:\Users\kevin\OneDrive\Escritorio\SEPTIMO_CICLO\VISION_POR_COMPUTADOR\Proyecto_Opencv7.0\OpenCV_7_0_0\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+org.opencv.test.OpenCV_7_0_0-mergeDebugAndroidTestResources-2 C:\Users\kevin\OneDrive\Escritorio\SEPTIMO_CICLO\VISION_POR_COMPUTADOR\Proyecto_Opencv7.0\OpenCV_7_0_0\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+org.opencv.test.OpenCV_7_0_0-debugAndroidTest-3 C:\Users\kevin\OneDrive\Escritorio\SEPTIMO_CICLO\VISION_POR_COMPUTADOR\Proyecto_Opencv7.0\OpenCV_7_0_0\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
+org.opencv.test.OpenCV_7_0_0-debug-4 C:\Users\kevin\OneDrive\Escritorio\SEPTIMO_CICLO\VISION_POR_COMPUTADOR\Proyecto_Opencv7.0\OpenCV_7_0_0\build\intermediates\packaged_res\debug\packageDebugResources
