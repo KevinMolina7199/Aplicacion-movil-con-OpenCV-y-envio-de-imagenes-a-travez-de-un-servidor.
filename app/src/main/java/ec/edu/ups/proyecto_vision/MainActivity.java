@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         //System.loadLibrary("proyecto_vision");
     }
 
-    Button camera, select;
+    Button camera, select,btnProcessing;
     ImageView imageView;
     Bitmap bitmap;
     Mat mat;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         camera = findViewById(R.id.camera);
         select = findViewById(R.id.select);
         imageView = findViewById(R.id.imageView);
-
+        btnProcessing=findViewById(R.id.btnProcesar);
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,6 +73,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CameraActivity.class);
                 startActivityForResult(intent, CAMERA_CODE);
+            }
+        });
+
+        btnProcessing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, ProcessingActivity.class);
+                startActivityForResult(intent,CAMERA_CODE);
             }
         });
     }

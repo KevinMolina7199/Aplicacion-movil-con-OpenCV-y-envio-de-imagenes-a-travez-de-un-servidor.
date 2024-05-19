@@ -47,10 +47,10 @@
         app:layout_constraintVertical_bias="0.951" />
 
     <Button
-        android:id="@+id/btnEnviar"
+        android:id="@+id/btnProcesar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enviar"
+        android:text="Procesar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.949"
