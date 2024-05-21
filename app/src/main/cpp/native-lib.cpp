@@ -8,6 +8,9 @@
 
 #include "android/bitmap.h"
 
+
+using namespace cv;
+
 extern "C" JNIEXPORT jstring
 
 JNICALL
@@ -106,27 +109,74 @@ void matToBitmap(JNIEnv * env, cv::Mat src, jobject bitmap, jboolean needPremult
         return;
     }
 }
-extern "C" JNIEXPORT void JNICALL
 
-Java_ec_edu_ups_proyecto_1vision_ProcessingActivity(
-        JNIEnv* env,
-        jobject /* this */,
-        jobject bitmapIn,
-        jobject bitmapOut,
-        jint hMin,
-        jint sMin,
-        jint vMin,
-        jint hMax,
-        jint sMax,
-        jint vMax){
-
-
+extern "C"
+JNIEXPORT void JNICALL
+Java_ec_edu_ups_proyecto_1vision_ProcessingActivity_filters(
+        JNIEnv *env,
+        jobject thiz,
+        jobject bitmap_in,
+        jobject bitmap_out,
+        jint h_min,
+        jint s_min,
+        jint v_min,
+        jint h_max,
+        jint s_max,
+        jint v_max) {
+    // TODO: implement filters()
     cv::Mat src;
-    bitmapToMat(env, bitmapIn, src, false);
-    //cv::flip(src, src, 0);
+    bitmapToMat(env,bitmap_in,src,false);
     cv::Mat tmp;
-    cv::cvtColor(src, tmp, cv::COLOR_BGR2HSV);
-    cv::inRange(tmp, cv::Scalar(hMin, sMin, vMin), cv::Scalar(hMax, sMax, vMax), tmp);
+    cv::cvtColor(src,tmp,cv::COLOR_BGR2HSV);
+    cv::inRange(tmp,cv::Scalar(h_min,s_min,v_min),cv::Scalar (h_max,s_max,v_max),tmp);
 
-    matToBitmap(env, tmp, bitmapOut, false);
+    matToBitmap(env,tmp,bitmap_out,false);
 }
+
+
+extern "C" {
+
+JNIEXPORT void JNICALL
+Java_ec_edu_ups_proyecto_1vision_ProcessingActivity_convertToGrayscale(JNIEnv *env, jobject thiz,
+                                                                       jobject bitmap_in,
+                                                                       jobject bitmap_out) {
+    AndroidBitmapInfo infoIn;
+    void *pixelsIn;
+    AndroidBitmapInfo infoOut;
+    void *pixelsOut;
+
+    try {
+        CV_Assert(AndroidBitmap_getInfo(env, bitmap_in, &infoIn) >= 0);
+        CV_Assert(infoIn.format == ANDROID_BITMAP_FORMAT_RGBA_8888);
+        CV_Assert(AndroidBitmap_lockPixels(env, bitmap_in, &pixelsIn) >= 0);
+        CV_Assert(pixelsIn);
+
+        CV_Assert(AndroidBitmap_getInfo(env, bitmap_out, &infoOut) >= 0);
+        CV_Assert(infoOut.format == ANDROID_BITMAP_FORMAT_RGBA_8888);
+        CV_Assert(AndroidBitmap_lockPixels(env, bitmap_out, &pixelsOut) >= 0);
+        CV_Assert(pixelsOut);
+
+        Mat src(infoIn.height, infoIn.width, CV_8UC4, pixelsIn);
+        Mat dst(infoOut.height, infoOut.width, CV_8UC4, pixelsOut);
+
+        cvtColor(src, dst, COLOR_RGBA2GRAY);
+
+        AndroidBitmap_unlockPixels(env, bitmap_in);
+        AndroidBitmap_unlockPixels(env, bitmap_out);
+
+    } catch (const cv::Exception &e) {
+        AndroidBitmap_unlockPixels(env, bitmap_in);
+        AndroidBitmap_unlockPixels(env, bitmap_out);
+
+        jclass je = env->FindClass("java/lang/Exception");
+        env->ThrowNew(je, e.what());
+    } catch (...) {
+        AndroidBitmap_unlockPixels(env, bitmap_in);
+        AndroidBitmap_unlockPixels(env, bitmap_out);
+
+        jclass je = env->FindClass("java/lang/Exception");
+        env->ThrowNew(je, "Unknown exception in JNI code {nBitmapToMat}");
+    }
+}
+
+} // extern "C"

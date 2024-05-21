@@ -34,12 +34,15 @@ public class MainActivity extends AppCompatActivity {
         //System.loadLibrary("proyecto_vision");
     }
 
-    Button camera, select,btnProcessing;
+    Button camera, select, btnProcessing;
     ImageView imageView;
     Bitmap bitmap;
     Mat mat;
 
-    int SELETC_CODE = 100, CAMERA_CODE = 101, CAPTURE_IMAGE_REQUEST_CODE=104;
+    Bitmap selectedBitmap;
+
+    private String capturedImagePath;  // Añadir esta variable
+    int SELETC_CODE = 100, CAMERA_CODE = 101, CAPTURE_IMAGE_REQUEST_CODE = 104;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         camera = findViewById(R.id.camera);
         select = findViewById(R.id.select);
         imageView = findViewById(R.id.imageView);
-        btnProcessing=findViewById(R.id.btnProcesar);
+        btnProcessing = findViewById(R.id.btnProcesar);
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,8 +82,9 @@ public class MainActivity extends AppCompatActivity {
         btnProcessing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this, ProcessingActivity.class);
-                startActivityForResult(intent,CAMERA_CODE);
+                Intent intent = new Intent(MainActivity.this, ProcessingActivity.class);
+                intent.putExtra("capturedImage", capturedImagePath);  // Pasar la ruta de la imagen
+                startActivityForResult(intent, CAMERA_CODE);
             }
         });
     }
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             if (data != null && data.getData() != null) {
                 try {
                     // Obtener la URI de la imagen seleccionada
-                    Bitmap selectedBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                    selectedBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
 
                     // Mostrar la imagen seleccionada en el ImageView
                     imageView.setImageBitmap(selectedBitmap);
@@ -119,17 +123,24 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if (requestCode == CAMERA_CODE && resultCode == RESULT_OK) {
             if (data != null && data.hasExtra("capturedImage")) {
-                String imagePath = data.getStringExtra("capturedImage");
-                File imageFile = new File(imagePath);
+                //String imagePath = data.getStringExtra("capturedImage");
+                //File imageFile = new File(imagePath);
 
                 // Cargar el archivo de imagen y crear un Bitmap
-                Bitmap capturedBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-
+                //Bitmap capturedBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                //selectedBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
 
                 // Mostrar la imagen capturada en el ImageView
-                imageView.setImageBitmap(capturedBitmap);
+                //imageView.setImageBitmap(selectedBitmap);
+
+                capturedImagePath = data.getStringExtra("capturedImage");  // Guardar la ruta de la imagen
+                File imageFile = new File(capturedImagePath);
+                selectedBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                imageView.setImageBitmap(selectedBitmap);
+
             }
         }
     }
+
 
 }

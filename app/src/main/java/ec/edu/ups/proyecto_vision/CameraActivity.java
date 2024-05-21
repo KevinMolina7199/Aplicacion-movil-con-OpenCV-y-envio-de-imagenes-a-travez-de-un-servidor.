@@ -67,12 +67,7 @@ public class CameraActivity extends org.opencv.android.CameraActivity {
 
     private void captureAndReturnImage() {
         if (currentFrame != null) {
-            //Bitmap bitmap = Bitmap.createBitmap(currentFrame.cols(), currentFrame.rows(), Bitmap.Config.ARGB_8888);
-            //Utils.matToBitmap(currentFrame, bitmap);
 
-            //ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            //byte[] byteArray = stream.toByteArray();
 
             Bitmap bitmap = Bitmap.createBitmap(currentFrame.cols(), currentFrame.rows(), Bitmap.Config.ARGB_8888);
             Utils.matToBitmap(currentFrame, bitmap);
@@ -86,8 +81,6 @@ public class CameraActivity extends org.opencv.android.CameraActivity {
             setResult(RESULT_OK, resultIntent);
             finish();
         }
-
-
 
     }
 
