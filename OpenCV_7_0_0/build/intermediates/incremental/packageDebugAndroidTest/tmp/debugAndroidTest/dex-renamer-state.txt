@@ -1,4 +1,4 @@
-#Sat May 18 12:16:27 ECT 2024
+#Tue May 21 22:05:48 ECT 2024
 base.0=C\:\\Users\\kevin\\OneDrive\\Escritorio\\SEPTIMO_CICLO\\VISION_POR_COMPUTADOR\\Proyecto_Opencv7.0\\OpenCV_7_0_0\\build\\intermediates\\dex\\debugAndroidTest\\mergeLibDexDebugAndroidTest\\10\\classes.dex
 base.1=C\:\\Users\\kevin\\OneDrive\\Escritorio\\SEPTIMO_CICLO\\VISION_POR_COMPUTADOR\\Proyecto_Opencv7.0\\OpenCV_7_0_0\\build\\intermediates\\dex\\debugAndroidTest\\mergeLibDexDebugAndroidTest\\12\\classes.dex
 base.2=C\:\\Users\\kevin\\OneDrive\\Escritorio\\SEPTIMO_CICLO\\VISION_POR_COMPUTADOR\\Proyecto_Opencv7.0\\OpenCV_7_0_0\\build\\intermediates\\dex\\debugAndroidTest\\mergeLibDexDebugAndroidTest\\13\\classes.dex

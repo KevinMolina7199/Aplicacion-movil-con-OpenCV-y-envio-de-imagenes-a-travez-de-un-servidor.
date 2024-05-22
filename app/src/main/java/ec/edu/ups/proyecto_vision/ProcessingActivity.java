@@ -29,6 +29,15 @@ import java.io.IOException;
 public class ProcessingActivity extends AppCompatActivity {
 
 
+    static {
+        if (OpenCVLoader.initDebug()) {
+            Log.d("MainActivity", "OpenCV is loaded");
+        } else {
+            Log.d("MainActivity", "OpenCV failed to load");
+        }
+        System.loadLibrary("native-lib");  // Nombre de la biblioteca debe coincidir con CMakeLists.txt
+    }
+
     Button enviar;
 
     Bitmap bitmapI, bitmapO;
@@ -53,11 +62,6 @@ public class ProcessingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_processing);
-        if (OpenCVLoader.initDebug()) {
-            Log.d("MainActivity", "OpenCV is loaded");
-        } else {
-            Log.d("MainActivity", "OpenCV failed to load");
-        }
 
         enviar = findViewById(R.id.btnEnviar);
         imageView2 = findViewById(R.id.imageView2);
@@ -77,9 +81,10 @@ public class ProcessingActivity extends AppCompatActivity {
         if (imagePath != null) {
             File imageFile = new File(imagePath);
             selectedBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-            imageView2.setImageBitmap(selectedBitmap);
-            applyFilters(); // Aplicar filtros cuando se carga la imagen
-
+            bitmapI = selectedBitmap.copy(Bitmap.Config.ARGB_8888, true);
+            bitmapO = Bitmap.createBitmap(bitmapI.getWidth(), bitmapI.getHeight(), Bitmap.Config.ARGB_8888);
+            convertToGrayscale(bitmapI, bitmapO);
+            imageView2.setImageBitmap(bitmapO);
         }
 
 
@@ -188,6 +193,9 @@ public class ProcessingActivity extends AppCompatActivity {
         //applyFilter();
 
     }
+
+    private native void convertToGrayscale(Bitmap bitmapIn, Bitmap bitmapOut);
+
 
     private void applyFilters() {
         if (selectedBitmap != null && selectedBitmap.getWidth() > 0 && selectedBitmap.getHeight() > 0) {

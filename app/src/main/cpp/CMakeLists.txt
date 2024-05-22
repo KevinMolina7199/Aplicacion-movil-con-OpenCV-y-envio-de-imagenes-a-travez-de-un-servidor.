@@ -13,7 +13,8 @@ project("proyecto_vision")
 set(OpenCV_STATIC on)
 set(OpenCV_DIR C:/Users/kevin/OneDrive/Escritorio/SEPTIMO_CICLO/VISION_POR_COMPUTADOR/OpenCV_skd/OpenCV-android-sdk/sdk/native/jni)
 find_package(OpenCV REQUIRED)
-include_directories(C:/Users/kevin/OneDrive/Escritorio/SEPTIMO_CICLO/VISION_POR_COMPUTADOR/OpenCV_skd/OpenCV-android-sdk/sdk/native/jni/include)
+include_directories(${OpenCV_INCLUDE_DIRS})
+# include_directories(C:/Users/kevin/OneDrive/Escritorio/SEPTIMO_CICLO/VISION_POR_COMPUTADOR/OpenCV_skd/OpenCV-android-sdk/sdk/native/jni/include)
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -27,10 +28,13 @@ include_directories(C:/Users/kevin/OneDrive/Escritorio/SEPTIMO_CICLO/VISION_POR_
 # System.loadLibrary() and pass the name of the library defined here;
 # for GameActivity/NativeActivity derived applications, the same library name must be
 # used in the AndroidManifest.xml file.
-add_library(${CMAKE_PROJECT_NAME} SHARED
+#add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
 
-        native-lib.cpp)
+#        native-lib.cpp)
+# Crear y nombrar la biblioteca
+add_library(native-lib SHARED native-lib.cpp)
+
 find_library(
         jnigraphics-lib jnigraphics
 )
@@ -43,10 +47,18 @@ find_library( # Sets the name of the path variable.
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
 # build script, prebuilt third-party libraries, or Android system libraries.
-target_link_libraries(${CMAKE_PROJECT_NAME}
-        # List libraries link to the target library
-        android
+#target_link_libraries(${CMAKE_PROJECT_NAME}
+#        # List libraries link to the target library
+#        android
+#        ${OpenCV_LIBS}
+#        ${jnigraphics-lib}
+#        ${log-lib}
+#        log)
+
+# Enlazar librerías al objetivo
+target_link_libraries(native-lib
         ${OpenCV_LIBS}
         ${jnigraphics-lib}
         ${log-lib}
+        android
         log)
