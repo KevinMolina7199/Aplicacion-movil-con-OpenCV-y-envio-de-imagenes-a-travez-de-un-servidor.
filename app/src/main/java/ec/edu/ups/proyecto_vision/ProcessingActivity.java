@@ -26,6 +26,8 @@ import org.opencv.core.Mat;
 import java.io.File;
 import java.io.IOException;
 
+import ec.edu.ups.proyecto_vision.databinding.ActivityMainBinding;
+
 public class ProcessingActivity extends AppCompatActivity {
 
 
@@ -39,24 +41,26 @@ public class ProcessingActivity extends AppCompatActivity {
     }
 
     Button enviar;
-
-    Bitmap bitmapI, bitmapO;
+    private ActivityMainBinding binding;
+    private Bitmap bitmapI;
+    private Bitmap bitmapO;
     ImageView imageView2;
 
-    SeekBar seekBarHMin;
-    SeekBar seekBarSMin;
-    SeekBar seekBarVMin;
-    SeekBar seekBarHMax;
-    SeekBar seekBarSMax;
-    SeekBar seekBarVMax;
+    private android.widget.SeekBar seekBarHMin;
+    private android.widget.SeekBar seekBarSMin;
+    private android.widget.SeekBar seekBarVMin;
+    private android.widget.SeekBar seekBarHMax;
+    private android.widget.SeekBar seekBarSMax;
+    private android.widget.SeekBar seekBarVMax;
     Bitmap selectedBitmap;
     int SELETC_CODE = 100, CAMERA_CODE = 101, CAPTURE_IMAGE_REQUEST_CODE = 104;
 
-   /* private void applyFilter(){
+
+    private void changeValues(){
         filters(bitmapI,bitmapO,seekBarHMin.getProgress(),seekBarSMin.getProgress(),seekBarVMin.getProgress(),
                 seekBarHMax.getProgress(),seekBarSMax.getProgress(),seekBarVMax.getProgress());
-        imageView.setImageBitmap(bitmapO);
-    }*/
+        imageView2.setImageBitmap(bitmapO);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +80,6 @@ public class ProcessingActivity extends AppCompatActivity {
         seekBarVMax = findViewById(R.id.sbVMax);
 
 
-
         String imagePath = getIntent().getStringExtra("capturedImage");
         if (imagePath != null) {
             File imageFile = new File(imagePath);
@@ -91,7 +94,7 @@ public class ProcessingActivity extends AppCompatActivity {
         seekBarHMin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                applyFilters();
+                changeValues();
             }
 
             @Override
@@ -108,7 +111,7 @@ public class ProcessingActivity extends AppCompatActivity {
         seekBarSMin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                applyFilters();
+                changeValues();
             }
 
             @Override
@@ -125,7 +128,7 @@ public class ProcessingActivity extends AppCompatActivity {
         seekBarVMin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                applyFilters();
+                changeValues();
             }
 
             @Override
@@ -142,7 +145,7 @@ public class ProcessingActivity extends AppCompatActivity {
         seekBarHMax.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                applyFilters();
+                changeValues();
             }
 
             @Override
@@ -159,7 +162,7 @@ public class ProcessingActivity extends AppCompatActivity {
         seekBarSMax.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                applyFilters();
+                changeValues();
             }
 
             @Override
@@ -176,7 +179,7 @@ public class ProcessingActivity extends AppCompatActivity {
         seekBarVMax.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                applyFilters();
+                changeValues();
             }
 
             @Override
@@ -190,46 +193,12 @@ public class ProcessingActivity extends AppCompatActivity {
             }
         });
 
-        //applyFilter();
+        changeValues();
 
     }
 
     private native void convertToGrayscale(Bitmap bitmapIn, Bitmap bitmapOut);
-
-
-    private void applyFilters() {
-        if (selectedBitmap != null && selectedBitmap.getWidth() > 0 && selectedBitmap.getHeight() > 0) {
-            // Crear una matriz OpenCV a partir del bitmap seleccionado
-            Mat srcMat = new Mat();
-            Utils.bitmapToMat(selectedBitmap, srcMat);
-
-            // Crear una matriz de destino para almacenar el resultado del procesamiento
-            Mat dstMat = new Mat();
-
-            // Llamar al método JNI para aplicar los filtros
-            filters(srcMat.getNativeObjAddr(), dstMat.getNativeObjAddr(), seekBarHMin.getProgress(), seekBarSMin.getProgress(), seekBarVMin.getProgress(), seekBarHMax.getProgress(), seekBarSMax.getProgress(), seekBarVMax.getProgress());
-
-            // Verificar las dimensiones de la matriz de destino
-            if (dstMat.cols() > 0 && dstMat.rows() > 0) {
-                // Convertir la matriz de destino de vuelta a un bitmap
-                Bitmap processedBitmap = Bitmap.createBitmap(dstMat.cols(), dstMat.rows(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(dstMat, processedBitmap);
-
-                // Mostrar el bitmap procesado en el ImageView
-                imageView2.setImageBitmap(processedBitmap);
-            } else {
-                Log.e("ProcessingActivity", "Invalid dimensions for destination matrix");
-            }
-        } else {
-            Log.e("ProcessingActivity", "Selected bitmap is null or has invalid dimensions");
-        }
-    }
-
-
-
-    private void filters(long nativeObjAddr, long nativeObjAddr1, int progress, int progress1, int progress2, int progress3, int progress4, int progress5) {
-    }
-    // public native void filters(Bitmap bitmapIn, Bitmap bitmapOut, int hMin, int sMin, int vMin, int hMax, int sMax, int vMax);
+    public native void filters(Bitmap bitmapIn, Bitmap bitmapOut, int hMin, int sMin, int vMin, int hMax, int sMax, int vMax);
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -248,6 +217,8 @@ public class ProcessingActivity extends AppCompatActivity {
         }
 
     }
+
+
 }
 
 
