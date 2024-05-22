@@ -13,3 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+OpenCV_7_0_0/build/outputs/apk/androidTest/debug/OpenCV_7_0_0-debug-androidTest.apk
