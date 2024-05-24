@@ -5,6 +5,23 @@
 
 using namespace cv;
 
+void applyGaussianSobelFilter(cv::Mat& src, cv::Mat& dst, int gaussianKernelSize) {
+    // Aplicar filtro gaussiano
+    cv::Mat blurred;
+    cv::GaussianBlur(src, blurred, cv::Size(gaussianKernelSize, gaussianKernelSize), 0);
+
+    // Aplicar el operador Sobel
+    cv::Mat sobelX, sobelY, sobelCombined;
+    cv::Sobel(blurred, sobelX, CV_16S, 1, 0);
+    cv::Sobel(blurred, sobelY, CV_16S, 0, 1);
+    cv::convertScaleAbs(sobelX, sobelX);
+    cv::convertScaleAbs(sobelY, sobelY);
+    cv::addWeighted(sobelX, 0.5, sobelY, 0.5, 0, sobelCombined);
+
+    // Asignar la matriz resultante a la matriz de destino
+    dst = sobelCombined.clone();
+}
+
 void bitmapToMat(JNIEnv * env, jobject bitmap, cv::Mat &dst, jboolean needUnPremultiplyAlpha){
     AndroidBitmapInfo  info;
     void*              pixels = 0;
@@ -168,4 +185,52 @@ Java_ec_edu_ups_proyecto_1vision_ProcessingActivity_filters(
     cv::inRange(tmp, cv::Scalar(hMin, sMin, vMin), cv::Scalar(hMax, sMax, vMax), tmp);
 
     matToBitmap(env, tmp, bitmapOut, false);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_ec_edu_ups_proyecto_1vision_ProcessingActivity_applyGaussianSobelFilter(
+        JNIEnv* env,
+        jobject /* this */,
+        jobject bitmapIn,
+        jobject bitmapOut,
+        jint gaussianKernelSize) {
+
+    cv::Mat src;
+    bitmapToMat(env, bitmapIn, src, false);
+
+    // Aplicar el filtro gaussiano seguido del operador Sobel
+    cv::Mat result;
+    applyGaussianSobelFilter(src, result, gaussianKernelSize);
+
+    // Convertir la matriz resultante de nuevo a bitmap
+    matToBitmap(env, result, bitmapOut, false);
+}
+
+extern "C" {
+
+JNIEXPORT void JNICALL
+Java_ec_edu_ups_proyecto_1vision_ProcessingActivity_applyScarletWitchEffect(
+        JNIEnv *env,
+        jobject /* this */,
+        jobject bitmapIn,
+        jobject bitmapOut) {
+
+    // Convertir los bitmaps de entrada y salida a matrices de OpenCV
+    Mat src, dst;
+    bitmapToMat(env, bitmapIn, src, false);
+
+    // Convertir la imagen a escala de grises
+    cvtColor(src, dst, COLOR_BGR2GRAY);
+
+    // Aplicar un umbral para resaltar los píxeles rojos
+    Mat redMask;
+    inRange(src, Scalar(0, 0, 100), Scalar(100, 100, 255), redMask);
+
+    // Aplicar el efecto Scarlet Witch combinando la imagen en escala de grises con la máscara roja
+    bitwise_and(dst, redMask, dst);
+
+    // Convertir la matriz de salida a bitmap
+    matToBitmap(env, dst, bitmapOut, false);
+}
 }

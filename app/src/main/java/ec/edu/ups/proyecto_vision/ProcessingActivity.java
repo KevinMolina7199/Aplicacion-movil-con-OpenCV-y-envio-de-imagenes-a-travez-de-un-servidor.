@@ -25,6 +25,19 @@ import org.opencv.core.Mat;
 
 import java.io.File;
 import java.io.IOException;
+import android.content.pm.PackageManager;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
 
 import ec.edu.ups.proyecto_vision.databinding.ActivityMainBinding;
 
@@ -46,6 +59,10 @@ public class ProcessingActivity extends AppCompatActivity {
     private Bitmap bitmapO;
     ImageView imageView2;
 
+
+    private int gaussianKernelSize = 15; // Tamaño del kernel gaussiano, puedes ajustarlo según sea necesario
+
+
     private android.widget.SeekBar seekBarHMin;
     private android.widget.SeekBar seekBarSMin;
     private android.widget.SeekBar seekBarVMin;
@@ -56,18 +73,21 @@ public class ProcessingActivity extends AppCompatActivity {
     int SELETC_CODE = 100, CAMERA_CODE = 101, CAPTURE_IMAGE_REQUEST_CODE = 104;
 
 
-    private void changeValues(){
-        filters(bitmapI,bitmapO,seekBarHMin.getProgress(),seekBarSMin.getProgress(),seekBarVMin.getProgress(),
-                seekBarHMax.getProgress(),seekBarSMax.getProgress(),seekBarVMax.getProgress());
+    /*private void changeValues() {
+        // Aplicar el filtro
+        filters(bitmapI, bitmapO, seekBarHMin.getProgress(), seekBarSMin.getProgress(), seekBarVMin.getProgress(),
+                seekBarHMax.getProgress(), seekBarSMax.getProgress(), seekBarVMax.getProgress());
+
+        // Mostrar el resultado en imageView2
         imageView2.setImageBitmap(bitmapO);
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_processing);
 
-        enviar = findViewById(R.id.btnEnviar);
+        //enviar = findViewById(R.id.btn_capture_image);
         imageView2 = findViewById(R.id.imageView2);
 
 
@@ -86,119 +106,23 @@ public class ProcessingActivity extends AppCompatActivity {
             selectedBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
             bitmapI = selectedBitmap.copy(Bitmap.Config.ARGB_8888, true);
             bitmapO = Bitmap.createBitmap(bitmapI.getWidth(), bitmapI.getHeight(), Bitmap.Config.ARGB_8888);
-            convertToGrayscale(bitmapI, bitmapO);
+            //convertToGrayscale(bitmapI, bitmapO);
+
+            applyGaussianSobelFilter(bitmapI, bitmapO, gaussianKernelSize);
+            //applyScarletWitchEffect(selectedBitmap, bitmapO);
+
             imageView2.setImageBitmap(bitmapO);
         }
 
 
-        seekBarHMin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                changeValues();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        seekBarSMin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                changeValues();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        seekBarVMin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                changeValues();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        seekBarHMax.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                changeValues();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        seekBarSMax.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                changeValues();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        seekBarVMax.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                changeValues();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        changeValues();
-
     }
 
-    private native void convertToGrayscale(Bitmap bitmapIn, Bitmap bitmapOut);
-    public native void filters(Bitmap bitmapIn, Bitmap bitmapOut, int hMin, int sMin, int vMin, int hMax, int sMax, int vMax);
+    //private native void convertToGrayscale(Bitmap bitmapIn, Bitmap bitmapOut);
+    //public native void filters(Bitmap bitmapIn, Bitmap bitmapOut, int hMin, int sMin, int vMin, int hMax, int sMax, int vMax);
+
+     private native void applyGaussianSobelFilter(Bitmap bitmapIn, Bitmap bitmapOut, int gaussianKernelSize);
+    //private native void applyScarletWitchEffect(Bitmap bitmapIn, Bitmap bitmapOut);
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
