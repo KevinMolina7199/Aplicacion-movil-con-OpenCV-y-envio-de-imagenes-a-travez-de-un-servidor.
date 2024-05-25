@@ -113,6 +113,24 @@ void matToBitmap(JNIEnv * env, cv::Mat src, jobject bitmap, jboolean needPremult
     }
 }
 
+void applyGaussianSobelFilterAndCombine(cv::Mat& src, cv::Mat& background, cv::Mat& dst, int gaussianKernelSize) {
+    // Aplicar filtro Gaussian-Sobel a la imagen de entrada
+    cv::Mat filtered;
+    applyGaussianSobelFilter(src, filtered, gaussianKernelSize);
+
+    // Rotar la imagen de fondo 90 grados
+    cv::Mat rotatedBackground;
+    cv::rotate(background, rotatedBackground, cv::ROTATE_90_COUNTERCLOCKWISE);
+
+    // Redimensionar la imagen de fondo si es necesario
+    if (rotatedBackground.size() != filtered.size()) {
+        cv::resize(rotatedBackground, rotatedBackground, filtered.size());
+    }
+
+    // Combinar la imagen filtrada con el fondo
+    cv::addWeighted(filtered, 0.5, rotatedBackground, 0.5, 0, dst);
+}
+
 extern "C" {
 
 JNIEXPORT void JNICALL
@@ -211,7 +229,7 @@ extern "C" {
 
 JNIEXPORT void JNICALL
 Java_ec_edu_ups_proyecto_1vision_ProcessingActivity_applyScarletWitchEffect(
-        JNIEnv *env,
+        JNIEnv* env,
         jobject /* this */,
         jobject bitmapIn,
         jobject bitmapOut) {
@@ -233,4 +251,17 @@ Java_ec_edu_ups_proyecto_1vision_ProcessingActivity_applyScarletWitchEffect(
     // Convertir la matriz de salida a bitmap
     matToBitmap(env, dst, bitmapOut, false);
 }
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_ec_edu_ups_proyecto_1vision_ProcessingActivity_applyGaussianSobelFilterAndCombine(
+        JNIEnv *env, jobject instance,
+        jobject bitmapIn, jobject backgroundBitmap, jobject bitmapOut, jint gaussianKernelSize) {
+    cv::Mat src;
+    cv::Mat background;
+    cv::Mat dst;
+    bitmapToMat(env, bitmapIn, src, false);
+    bitmapToMat(env, backgroundBitmap, background, false);
+    applyGaussianSobelFilterAndCombine(src, background, dst, gaussianKernelSize);
+    matToBitmap(env, dst, bitmapOut, false);
 }

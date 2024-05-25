@@ -53,22 +53,15 @@ public class ProcessingActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");  // Nombre de la biblioteca debe coincidir con CMakeLists.txt
     }
 
-    Button enviar;
     private ActivityMainBinding binding;
     private Bitmap bitmapI;
     private Bitmap bitmapO;
     ImageView imageView2;
 
+    private Bitmap backgroundBitmap;
 
     private int gaussianKernelSize = 15; // Tamaño del kernel gaussiano, puedes ajustarlo según sea necesario
 
-
-    private android.widget.SeekBar seekBarHMin;
-    private android.widget.SeekBar seekBarSMin;
-    private android.widget.SeekBar seekBarVMin;
-    private android.widget.SeekBar seekBarHMax;
-    private android.widget.SeekBar seekBarSMax;
-    private android.widget.SeekBar seekBarVMax;
     Bitmap selectedBitmap;
     int SELETC_CODE = 100, CAMERA_CODE = 101, CAPTURE_IMAGE_REQUEST_CODE = 104;
 
@@ -89,38 +82,33 @@ public class ProcessingActivity extends AppCompatActivity {
 
         //enviar = findViewById(R.id.btn_capture_image);
         imageView2 = findViewById(R.id.imageView2);
-
-
-        seekBarHMin = findViewById(R.id.sbHMin);
-        seekBarSMin = findViewById(R.id.sbSMin);
-        seekBarVMin = findViewById(R.id.sbVMin);
-
-        seekBarHMax = findViewById(R.id.sbHMax);
-        seekBarSMax = findViewById(R.id.sbSMax);
-        seekBarVMax = findViewById(R.id.sbVMax);
-
-
         String imagePath = getIntent().getStringExtra("capturedImage");
+
+
         if (imagePath != null) {
             File imageFile = new File(imagePath);
-            selectedBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-            bitmapI = selectedBitmap.copy(Bitmap.Config.ARGB_8888, true);
+            //selectedBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+            //bitmapI = selectedBitmap.copy(Bitmap.Config.ARGB_8888, true);
+            //bitmapO = Bitmap.createBitmap(bitmapI.getWidth(), bitmapI.getHeight(), Bitmap.Config.ARGB_8888);
+            bitmapI = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
             bitmapO = Bitmap.createBitmap(bitmapI.getWidth(), bitmapI.getHeight(), Bitmap.Config.ARGB_8888);
-            //convertToGrayscale(bitmapI, bitmapO);
 
-            applyGaussianSobelFilter(bitmapI, bitmapO, gaussianKernelSize);
-            //applyScarletWitchEffect(selectedBitmap, bitmapO);
+            backgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fondo);  // Asegúrate de tener una imagen llamada background en res/drawable
+            backgroundBitmap = Bitmap.createScaledBitmap(backgroundBitmap, bitmapI.getWidth(), bitmapI.getHeight(), false);
 
+            applyGaussianSobelFilterAndCombine(bitmapI, backgroundBitmap, bitmapO, gaussianKernelSize);
             imageView2.setImageBitmap(bitmapO);
         }
 
-
     }
+
+    private native void applyGaussianSobelFilterAndCombine(Bitmap bitmapIn, Bitmap backgroundBitmap, Bitmap bitmapOut, int gaussianKernelSize);
+
 
     //private native void convertToGrayscale(Bitmap bitmapIn, Bitmap bitmapOut);
     //public native void filters(Bitmap bitmapIn, Bitmap bitmapOut, int hMin, int sMin, int vMin, int hMax, int sMax, int vMax);
 
-     private native void applyGaussianSobelFilter(Bitmap bitmapIn, Bitmap bitmapOut, int gaussianKernelSize);
+    //private native void applyGaussianSobelFilter(Bitmap bitmapIn, Bitmap bitmapOut, int gaussianKernelSize);
     //private native void applyScarletWitchEffect(Bitmap bitmapIn, Bitmap bitmapOut);
 
 

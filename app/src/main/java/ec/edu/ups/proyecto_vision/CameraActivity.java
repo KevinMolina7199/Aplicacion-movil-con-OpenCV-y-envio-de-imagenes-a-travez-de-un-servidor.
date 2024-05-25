@@ -41,9 +41,9 @@ public class CameraActivity extends org.opencv.android.CameraActivity {
 
             @Override
             public void onCameraViewStopped() {
-               if (currentFrame != null) {
-                   currentFrame.release();
-               }
+                if (currentFrame != null) {
+                    currentFrame.release();
+                }
             }
 
             @Override
