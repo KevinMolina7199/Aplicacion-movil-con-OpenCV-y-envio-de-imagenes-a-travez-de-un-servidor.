@@ -29,4 +29,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.926" />
 
+    <TextView
+        android:id="@+id/fpsTextView"
+        android:layout_width="131dp"
+        android:layout_height="88dp"
+        android:layout_margin="16dp"
+        android:text="FPS: 0"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="25sp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="634dp"
+        tools:ignore="MissingConstraints" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

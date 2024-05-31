@@ -129,6 +129,55 @@ void applyGaussianSobelFilterAndCombine(cv::Mat& src, cv::Mat& background, cv::M
 
     // Combinar la imagen filtrada con el fondo
     cv::addWeighted(filtered, 0.5, rotatedBackground, 0.5, 0, dst);
+
+}
+void applyLaplacianFilter(cv::Mat& src, cv::Mat& dst) {
+    cv::Laplacian(src, dst, CV_16S, 3);
+    cv::convertScaleAbs(dst, dst);
+}
+
+void applyCannyFilter(cv::Mat& src, cv::Mat& dst, int lowThreshold, int highThreshold) {
+    cv::Canny(src, dst, lowThreshold, highThreshold);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_ec_edu_ups_proyecto_1vision_ProcessingActivity_applyLaplacianFilter(
+        JNIEnv* env,
+        jobject /* this */,
+        jobject bitmapIn,
+        jobject bitmapOut) {
+
+    cv::Mat src;
+    bitmapToMat(env, bitmapIn, src, false);
+
+    // Aplicar el filtro Laplaciano
+    cv::Mat result;
+    applyLaplacianFilter(src, result);
+
+    // Convertir la matriz resultante de nuevo a bitmap
+    matToBitmap(env, result, bitmapOut, false);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_ec_edu_ups_proyecto_1vision_ProcessingActivity_applyCannyFilter(
+        JNIEnv* env,
+        jobject /* this */,
+        jobject bitmapIn,
+        jobject bitmapOut,
+        jint lowThreshold,
+        jint highThreshold) {
+
+    cv::Mat src;
+    bitmapToMat(env, bitmapIn, src, false);
+
+    // Aplicar el filtro Canny
+    cv::Mat result;
+    applyCannyFilter(src, result, lowThreshold, highThreshold);
+
+    // Convertir la matriz resultante de nuevo a bitmap
+    matToBitmap(env, result, bitmapOut, false);
 }
 
 extern "C" {

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Capture and Merge</title>
+    <link rel="stylesheet" href="ramona.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>Captura de Cámara Web</h2>
+            <video id="videoElement" autoplay></video>
+            <button id="captureImage">Capturar Imagen</button>
+            <canvas id="canvas" style="display:none;"></canvas>
+            <img id="capturedImage" alt="Imagen Capturada">
+            <button id="uploadImage" style="display:none;">Subir Imagen</button>
+        </div>
+        <div class="card">
+            <h2>Captura de Video desde la Cámara Web</h2>
+            <video id="recordedVideo" controls></video>
+            <button id="startRecording">Iniciar Grabación</button>
+            <button id="stopRecording" style="display:none;">Detener Grabación</button>
+            <button id="uploadVideo" style="display:none;">Subir Video</button>
+        </div>
+        <div class="card">
+            <h2>Imágenes Subidas desde la Aplicación</h2>
+            <img id="uploadedImage" alt="Imagen Subida">
+            <button id="updateImageButton">Actualizar Imagen</button>
+        </div>
+        <div class="card">
+            <h2>Fusionar Imágenes</h2>
+            <button id="mergeImagesButton">Mostrar Imagen Fusionada</button>
+            <img id="mergedImage" alt="Imagen Fusionada">
+        </div>
+        <div class="card">
+            <h2>Fusionar Video con Imagen</h2>
+            <button id="mergeVideoButton">Fusionar Video</button>
+            <video id="mergedVideo" controls></video>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
