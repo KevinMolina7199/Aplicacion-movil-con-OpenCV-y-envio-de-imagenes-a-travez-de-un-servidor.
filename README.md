@@ -3,6 +3,8 @@
 # Proyecto de Filtro de Imágenes con OpenCV y Flask
 
 Este proyecto permite capturar una imagen en una aplicación Android utilizando OpenCV, aplicar un filtro a la imagen, y luego enviar esta imagen a un servidor en Python que utiliza Flask. El servidor toma otra imagen con la cámara de la laptop, combina ambas imágenes y muestra el resultado final.
+
+
 ![image](https://github.com/user-attachments/assets/18f765f2-2318-45b3-b80b-9da2beaa6e03)
 
 ## Estructura del Proyecto
