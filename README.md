@@ -86,4 +86,4 @@ Las contribuciones son bienvenidas. Si tienes ideas para mejorar el proyecto, no
 
 ## Autor
 
-- **Kevin Ismael Molina Arpi** - [Tu GitHub](https://github.com/tu-usuario)
+- **Kevin Ismael Molina Arpi** - https://github.com/KevinMolina7199/Aplicacion-movil-con-OpenCV-y-envio-de-imagenes-a-travez-de-un-servidor..git
